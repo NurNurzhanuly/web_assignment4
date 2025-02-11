@@ -1,7 +1,8 @@
-/* Общие стили */
+/* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
     margin: 0;
     padding: 0;
     display: flex;
@@ -11,21 +12,21 @@ body {
   }
   
   .container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 80%;
-    max-width: 500px;
+    max-width: 600px;
     text-align: center;
   }
   
   h1 {
-    color: #333;
+    color: #007bff;
     margin-bottom: 20px;
   }
   
-  /* Стили форм */
+  /* Form Styles */
   form {
     display: flex;
     flex-direction: column;
@@ -34,70 +35,90 @@ body {
   
   label {
     text-align: left;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     color: #555;
+    font-weight: bold;
   }
   
   input[type="text"],
   input[type="email"],
   input[type="password"] {
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
     font-size: 16px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
   }
   
   button[type="submit"] {
     background-color: #007bff;
     color: #fff;
-    padding: 12px 20px;
+    padding: 14px 24px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
+    font-size: 18px;
+    transition: background-color 0.2s ease-in-out;
   }
   
   button[type="submit"]:hover {
     background-color: #0056b3;
   }
   
-  /* Стили сообщений об ошибках */
+  /* Error Messages */
   .error-message {
-    color: #dc3545;
-    margin-bottom: 15px;
-    padding: 10px;
+    color: #721c24;
+    margin-bottom: 20px;
+    padding: 15px;
     background-color: #f8d7da;
     border: 1px solid #f5c6cb;
-    border-radius: 4px;
+    border-radius: 6px;
+    text-align: left;
   }
   
-  /* Стили для панели управления */
+  /* Dashboard Styles */
   .dashboard-info {
     margin-top: 20px;
-    color: #777;
+    color: #6c757d;
   }
   
   .logout-button {
     display: inline-block;
-    padding: 10px 15px;
-    background-color: #6c757d;
+    padding: 12px 20px;
+    background-color: #dc3545;
     color: #fff;
     text-decoration: none;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+    border-radius: 6px;
+    transition: background-color 0.2s ease-in-out;
   }
   
   .logout-button:hover {
-    background-color: #5a6268;
+    background-color: #c82333;
   }
   
   /* Admin Area */
   .admin-section {
-      background-color: #e9ecef;
-      padding: 15px;
-      border-radius: 5px;
-      margin-top: 20px;
-      text-align: left;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 6px;
+    margin-top: 20px;
+    text-align: left;
+  }
+  
+  /* Media Queries */
+  @media (max-width: 768px) {
+    .container {
+      width: 95%;
+      max-width: none;
+      padding: 20px;
+    }
   }

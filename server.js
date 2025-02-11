@@ -5,6 +5,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const path = require('path');
 const dotenv = require('dotenv');
+const expressLayouts = require('express-ejs-layouts');
 
 dotenv.config();
 
@@ -31,6 +32,9 @@ mongoose.connect(mongoUri, {
 // EJS setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+app.use(expressLayouts);
+app.set('layout', 'layout');
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -61,21 +65,23 @@ const requireLogin = (req, res, next) => {
     // Добавляем информацию о пользователе в `res.locals`, чтобы она была доступна в шаблонах EJS
     res.locals.user = {
         userId: req.session.userId,
-        username: req.session.username
-        // Здесь можно добавить другие данные пользователя, если они хранятся в сессии
+        username: req.session.username,
+        role: req.session.role || 'user' // Add default role if not set
     };
     next();
 };
 
+// Model import
+const User = require('./models/user'); // Assumes you have a User model
+
 // Routes
-// Home route
 app.get('/', (req, res) => {
     res.redirect('/dashboard');
 });
 
 // Register
 app.get('/register', (req, res) => {
-    res.render('register', { error: null }); // Передаём `null`, чтобы не было ошибки, если нет сообщения об ошибке
+    res.render('register', { error: null });
 });
 
 app.post('/register', async (req, res) => {
@@ -90,23 +96,19 @@ app.post('/register', async (req, res) => {
             return res.render('register', { error: 'Password must be at least 6 characters' });
         }
 
-        // Проверяем, существует ли пользователь с таким email
         const existingUser = await User.findOne({ email: email });
         if (existingUser) {
           return res.render('register', { error: 'User with this email already exists' });
         }
 
-        // Хешируем пароль
-        const hashedPassword = await bcrypt.hash(password, 10); // 10 - salt rounds
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        const user = new User({ username, email, password: hashedPassword }); // Сохраняем хешированный пароль
+        const user = new User({ username, email, password: hashedPassword });
         await user.save();
         req.session.userId = user._id;
         req.session.username = username;
-
-        // Добавляем role пользователя в сессию (по умолчанию - 'user')
-        req.session.role = user.role || 'user'; // Установка роли, если она определена в модели
-
+        req.session.role = user.role || 'user';  // Role at registration
         res.redirect('/dashboard');
     } catch (err) {
         console.error(err);
@@ -116,7 +118,7 @@ app.post('/register', async (req, res) => {
 
 // Login
 app.get('/login', (req, res) => {
-    res.render('login', { error: null }); // То же, что и в GET /register
+    res.render('login', { error: null });
 });
 
 app.post('/login', async (req, res) => {
@@ -128,14 +130,12 @@ app.post('/login', async (req, res) => {
             return res.render('login', { error: 'Invalid email or password' });
         }
 
-        // Сравниваем пароль с хешированным паролем
-        const isMatch = await bcrypt.compare(password, user.password); // Используем bcrypt для сравнения
+        const isMatch = await bcrypt.compare(password, user.password);
 
         if (isMatch) {
             req.session.userId = user._id;
             req.session.username = user.username;
-            req.session.role = user.role || 'user';  //  Роль в сессию
-
+            req.session.role = user.role || 'user'; // Role at login
             return res.redirect('/dashboard');
         } else {
             return res.render('login', { error: 'Invalid email or password' });
@@ -159,23 +159,20 @@ app.get('/logout', (req, res) => {
 // Dashboard
 app.get('/dashboard', requireLogin, async (req, res) => {
     try {
-        const username = req.session.username;
-
-        // Передаём username и userId в шаблон
-        res.render('dashboard', { username: username, userId: req.session.userId });
+        // username available in res.locals.user.username
+        res.render('dashboard');  // No need to pass data
     } catch (error) {
         console.error(error);
         res.redirect('/login');
     }
 });
 
-//  Пример protected route (для администраторов, например)
+//Admin test
 app.get('/admin', requireLogin, (req, res) => {
-    // Проверка роли пользователя в сессии
     if (req.session.role !== 'admin') {
-        return res.status(403).send('Forbidden: You do not have permission to access this page.'); //  Или редирект
+      return res.status(403).send('Forbidden');
     }
-    res.send("Welcome to the admin area!"); // Или отрисовка админского интерфейса
+    res.send("Admin Area");
 });
 
 // Start the server
