@@ -1,15 +1,29 @@
-<% layout('layout', { title: 'Dashboard' }) %>
-<h1>Dashboard</h1>
-<% if (locals.user) { %>
-  <p>Welcome, <%= locals.user.username %>!</p>
-  <p>User ID: <%= locals.user.userId %></p>
-  <% if (locals.user.role === 'admin') { %>
-    <section class="admin-section">
-      <h2>Admin Area</h2>
-      <p>You have admin privileges.</p>
-    </section>
-  <% } %>
-  <a href="/logout" class="logout-button">Logout</a>
-<% } else { %>
-  <p>Please <a href="/login">login</a> to view the dashboard.</p>
-<% } %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h1>Dashboard</h1>
+    <% if (locals.user) { %>
+      <p>Welcome, <%= locals.user.username %>!</p>
+      <p>User ID: <%= locals.user.userId %></p>
+      <% if (locals.user.role === 'admin') { %>
+        <section class="admin-section">
+          <h2>Admin Area</h2>
+          <p>You have admin privileges.</p>
+        </section>
+      <% } %>
+      <a href="/logout" class="logout-button">Logout</a>
+    <% } else { %>
+      <p>Please <a href="/login">login</a> to view the dashboard.</p>
+    <% } %>
+  </div>
+</body>
+</html>

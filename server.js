@@ -5,37 +5,15 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const path = require('path');
 const dotenv = require('dotenv');
-const expressLayouts = require('express-ejs-layouts'); // Import
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// EJS setup - VERY IMPORTANT ORDER
+// EJS setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
-app.use(expressLayouts); // Use *before* defining routes!
-app.set('layout', 'layout'); // Optional, 'layout' is the default
-app.locals.layout = true; // Add this line!
-
-// MongoDB Connection
-const username = encodeURIComponent(process.env.DB_USER);
-const password = encodeURIComponent(process.env.DB_PASS);
-const cluster = process.env.DB_CLUSTER;
-const dbName = process.env.DB_NAME;
-const mongoUri = `mongodb+srv://${username}:${password}@${cluster}/${dbName}?retryWrites=true&w=majority`;
-
-mongoose.connect(mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => {
-    console.error('MongoDB connection error:', err);
-    process.exit(1);
-});
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
