@@ -2,10 +2,29 @@
 <html>
 <head>
   <title>Dashboard</title>
+  <link rel="stylesheet" href="/style.css"> <!-- Ссылка на ваш CSS (опционально) -->
 </head>
 <body>
-  <h1>Dashboard</h1>
-  <p>Добро пожаловать, <%= username %>!</p>
-  <a href="/logout">Выйти</a>
+  <div class="container">
+    <h1>Dashboard</h1>
+
+    <% if (locals.user) { %>  <!-- Проверяем, что user существует -->
+      <p>Welcome, <%= user.username %>!</p>
+      <p>User ID: <%= user.userId %></p>
+
+      <% if (user.role === 'admin') { %>
+        <section class="admin-section">
+          <h2>Admin Area</h2>
+          <p>You have admin privileges.</p>
+          <!-- Добавьте админский функционал -->
+        </section>
+      <% } %>
+
+      <a href="/logout" class="logout-button">Logout</a>
+    <% } else { %>
+      <p>Please <a href="/login">login</a> to view the dashboard.</p>
+    <% } %>
+
+  </div>
 </body>
 </html>
