@@ -5,12 +5,19 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const path = require('path');
 const dotenv = require('dotenv');
-const expressLayouts = require('express-ejs-layouts');
+const expressLayouts = require('express-ejs-layouts'); // Import
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// EJS setup - VERY IMPORTANT ORDER
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(expressLayouts); // Use *before* defining routes!
+app.set('layout', 'layout'); // Optional, 'layout' is the default
 
 // MongoDB Connection
 const username = encodeURIComponent(process.env.DB_USER);
@@ -28,13 +35,6 @@ mongoose.connect(mongoUri, {
     console.error('MongoDB connection error:', err);
     process.exit(1);
 });
-
-// EJS setup
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-app.use(expressLayouts);
-app.set('layout', 'layout');
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -74,7 +74,7 @@ const requireLogin = (req, res, next) => {
 // Model import
 const User = require('./models/user'); // Assumes you have a User model
 
-// Routes
+// Routes - DEFINED AFTER LAYOUT MIDDLEWARE
 app.get('/', (req, res) => {
     res.redirect('/dashboard');
 });
