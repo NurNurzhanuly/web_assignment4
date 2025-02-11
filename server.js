@@ -18,6 +18,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(expressLayouts); // Use *before* defining routes!
 app.set('layout', 'layout'); // Optional, 'layout' is the default
+app.locals.layout = true; // Add this line!
 
 // MongoDB Connection
 const username = encodeURIComponent(process.env.DB_USER);
