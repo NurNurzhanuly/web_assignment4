@@ -63,6 +63,11 @@ const requireLogin = (req, res, next) => {
 
 // Routes
 
+// Home route - ADD THIS
+app.get('/', (req, res) => {
+    res.send('Welcome to my application!'); // Or any content/HTML you want to display
+});
+
 // Register
 app.get('/register', (req, res) => {
     res.render('register');
